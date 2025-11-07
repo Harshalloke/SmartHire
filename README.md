@@ -113,7 +113,7 @@ smarthire/
 
 ## 🌍 Deployment [Live Demo](https://web-production-1448.up.railway.app/)
 
-**Deployed on Railway Free tire
+*Deployed on Railway Free tire
 
 ## 🔌 API Usage
 
