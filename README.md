@@ -1,8 +1,6 @@
-perfect ✅ — here’s a **ready-to-commit README.md** for your project, written in clean GitHub style and fully tailored to your SmartHire app:
 
----
 
-````markdown
+
 # 🧠 SmartHire — AI Resume Analyzer
 
 SmartHire is an **AI-powered Resume & Job Description Analyzer** built with **Python + Flask**.  
