@@ -111,25 +111,9 @@ smarthire/
 
 ---
 
-## 🌍 Deployment (Render — Free Tier)
+## 🌍 Deployment [Live Demo](https://web-production-1448.up.railway.app/)
 
-1. Push your repo to GitHub
-2. Create a new **Web Service** on [Render](https://render.com)
-3. Connect your repo
-4. **Start Command:**
-
-   ```
-   gunicorn app:app --workers=2 --threads=4 --timeout=120
-   ```
-5. Add a **Disk**:
-
-   * Mount path: `/opt/render/project/src/data`
-   * Size: 1 GB (for history persistence)
-6. Open your public URL 🎉
-
-Full Render guide → in `/docs.html`
-
----
+**Deployed on Railway Free tire
 
 ## 🔌 API Usage
 
