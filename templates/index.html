@@ -1,0 +1,146 @@
+{% extends "base.html" %} {% block content %}
+
+<section class="hero card">
+  <div>
+    <h1 class="hero__title">AI Recruitment Assistant</h1>
+    <p class="hero__subtitle">
+      Upload your resume, pick a role, and get a professional analysis: match %,
+      missing skills, ATS score, and more.
+    </p>
+    <ul class="hero__bullets">
+      <li>Section-weighted matching</li>
+      <li>TF-IDF + smart tokenization</li>
+      <li>ATS hints & experience level</li>
+    </ul>
+  </div>
+</section>
+
+<section class="card">
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="flash">
+    {% for m in messages %}
+    <div class="flash-item">{{ m }}</div>
+    {% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+
+  <form
+    class="form"
+    action="{{ url_for('analyze') }}"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    <div class="grid-2 gap-lg">
+      <div>
+        <label class="label">Resume (PDF/DOCX/TXT)</label>
+
+        <div id="dropArea" class="drop">
+          <input
+            type="file"
+            id="resume"
+            name="resume"
+            accept=".pdf,.docx,.txt"
+            required
+            hidden
+          />
+          <div class="drop__cta">
+            <div class="drop__icon">📄</div>
+            <div>
+              <strong>Drag & drop</strong> your resume here<br />
+              or
+              <button type="button" class="btn btn--link" id="browseBtn">
+                browse files
+              </button>
+            </div>
+          </div>
+          <div id="fileName" class="drop__filename"></div>
+        </div>
+      </div>
+
+      <div>
+        <label class="label">Use dataset role (optional)</label>
+
+        <!-- Hidden native select for forms & fallback -->
+        <select id="role_hint" name="role_hint" class="select" hidden>
+          <option value="">— Select a role —</option>
+          {% for r in roles %}
+          <option value="{{ r.role }}" data-desc="{{ r.description|e }}">
+            {{ r.role }}
+          </option>
+          {% endfor %}
+        </select>
+
+        <!-- Custom Select -->
+        <div class="cselect" id="cselect-role" data-for="role_hint">
+          <button
+            type="button"
+            class="cselect__button"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+            aria-labelledby="cselect-role-label cselect-role-value"
+          >
+            <span id="cselect-role-label" class="cselect__label">Role</span>
+            <span id="cselect-role-value" class="cselect__value"
+              >— Select a role —</span
+            >
+            <span class="cselect__chev">▾</span>
+          </button>
+
+          <ul
+            class="cselect__list"
+            role="listbox"
+            tabindex="-1"
+            aria-activedescendant=""
+          >
+            <li class="cselect__option" role="option" data-value="">
+              — Select a role —
+            </li>
+            {% for r in roles %}
+            <li
+              class="cselect__option"
+              role="option"
+              data-value="{{ r.role }}"
+              data-desc="{{ r.description|e }}"
+            >
+              {{ r.role }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <label class="label mt">Job Description</label>
+        <textarea
+          id="job_description"
+          name="job_description"
+          rows="8"
+          class="textarea"
+          placeholder="Paste the JD here..."
+        ></textarea>
+        <small class="muted"
+          >Pick a role to auto-fill JD, or paste your own.</small
+        >
+      </div>
+    </div>
+
+    <div class="form__actions">
+      <button class="btn" type="submit">Analyze</button>
+    </div>
+  </form>
+</section>
+
+<script>
+  (function () {
+    const sel = document.getElementById("role_hint");
+    const txt = document.getElementById("job_description");
+    if (!sel || !txt) return;
+    sel.addEventListener("change", () => {
+      const opt = sel.options[sel.selectedIndex];
+      const desc = opt.getAttribute("data-desc") || "";
+      if (desc && !txt.value.trim()) {
+        txt.value = desc;
+      }
+    });
+  })();
+</script>
+
+{% endblock %}

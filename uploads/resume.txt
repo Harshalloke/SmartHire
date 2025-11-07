@@ -1,0 +1,25 @@
+John Doe
+Email: johndoe@gmail.com
+Phone: +91 9876543210
+
+Objective:
+Data Analyst with 2 years of experience in data visualization and reporting.
+
+Skills:
+Python, SQL, Excel, Power BI, Data Analysis, Pandas, Statistics, Communication
+
+Experience:
+- Created dashboards in Power BI for sales teams.apisauthentication
+caching
+cd.
+cloud
+databases
+deployment
+docker
+java
+monitoring
+- Used SQL queries to extract and analyze sales performance data.
+- Automated monthly reports using Python and Excel.
+
+Education:
+B.Sc. in Computer Science

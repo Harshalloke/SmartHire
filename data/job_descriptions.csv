@@ -1,0 +1,11 @@
+role,description
+Data Analyst,"SQL, Excel, Python, dashboards, data visualization (Tableau/Power BI), statistics, business metrics, data cleaning, reporting."
+Machine Learning Engineer,"Python, scikit-learn, TensorFlow/PyTorch, model training, feature engineering, data pipelines, MLOps, Docker, cloud (AWS/GCP/Azure), monitoring."
+Data Scientist,"Python, statistics, experimentation (A/B testing), ML algorithms, feature engineering, SQL, visualization, storytelling, notebooks, deployment basics."
+Business Analyst,"Requirements gathering, SQL, Excel, dashboards, KPIs, stakeholder communication, documentation, process improvement."
+Frontend Developer,"HTML, CSS, JavaScript, React, accessibility, performance optimization, responsive design, testing, REST APIs, TypeScript."
+Backend Developer,"APIs, Python/Node/Java, databases (SQL/NoSQL), authentication, caching, Docker, cloud deployment, monitoring, CI/CD."
+DevOps Engineer,"CI/CD, Docker, Kubernetes, infrastructure-as-code, monitoring/alerting, cloud, scripting (Python/Bash), security basics."
+Data Engineer,"ETL/ELT, Python, SQL, data pipelines, Airflow, Spark, data modeling, warehousing, cloud storage, reliability."
+Product Manager,"Backlog management, user stories, prioritization, metrics, stakeholder alignment, experiments, roadmaps, communication."
+QA Engineer,"Test planning, test cases, automation (Selenium/Cypress), bug tracking, CI integration, performance testing, reporting."

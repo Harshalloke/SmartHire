@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h1 class="mt-0">History</h1>
+  <p class="muted">Your last analyses are stored locally in a lightweight SQLite DB.</p>
+
+  <form method="get" action="{{ url_for('history') }}" class="grid-2" style="align-items:end;">
+    <div>
+      <label class="label">Search</label>
+      <input type="text" class="textarea" name="q" value="{{ q }}" placeholder="Filter by role or filename..." />
+    </div>
+    <div class="form__actions">
+      <button class="btn" type="submit">Search</button>
+      <a class="btn btn--ghost" href="{{ url_for('history') }}">Reset</a>
+    </div>
+  </form>
+</section>
+
+<section class="card">
+  <h2 class="mt-0">Recent Runs</h2>
+
+  {% if runs and runs|length > 0 %}
+  <div class="history-table-wrap">
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>When (UTC)</th>
+          <th>Filename</th>
+          <th>Role</th>
+          <th>Match %</th>
+          <th>ATS</th>
+          <th>Top Keywords</th>
+          <th>Missing</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in runs %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td class="muted">{{ r.created_at }}</td>
+          <td>{{ r.filename }}</td>
+          <td>{{ r.role_hint }}</td>
+          <td><strong>{{ "%.2f"|format(r.match_percent or 0) }}</strong></td>
+          <td>{{ r.ats_score }}</td>
+          <td>
+            {% set t = r.top_keywords %}
+            {% if t %}
+              {% set arr = t|safe %}
+            {% endif %}
+            <div class="chips">
+              {% for kw in ( (t|tojson|safe)|loads if false else [] ) %}{% endfor %}
+              {% for kw in ( (r.top_keywords|default("[]")) | tojson | safe ) %}{% endfor %}
+            </div>
+          </td>
+          <td class="muted small">
+            {{ r.missing_keywords }}
+          </td>
+          <td>
+            <form method="post" action="{{ url_for('history_delete') }}">
+              <input type="hidden" name="id" value="{{ r.id }}"/>
+              <button class="btn btn--ghost" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form method="post" action="{{ url_for('history_clear') }}" class="form__actions">
+    <button class="btn btn--ghost" type="submit" onclick="return confirm('Clear all history?')">Clear All</button>
+  </form>
+  {% else %}
+    <p class="muted">No history yet. Run an analysis first.</p>
+  {% endif %}
+</section>
+
+<script>
+  // pretty render keywords/missing from JSON text columns
+  (function(){
+    const rows = document.querySelectorAll(".history-table tbody tr");
+    rows.forEach(tr => {
+      try {
+        const tkwCell = tr.children[6];
+        const mkwCell = tr.children[7];
+        const tjson = JSON.parse(tkwCell.textContent || "[]");
+        const mjson = JSON.parse(mkwCell.textContent || "[]");
+
+        // render chips
+        const chipsDiv = document.createElement("div");
+        chipsDiv.className = "chips";
+        (tjson || []).slice(0,8).forEach(k => {
+          const li = document.createElement("span");
+          li.className = "chip";
+          li.textContent = k;
+          chipsDiv.appendChild(li);
+        });
+        tkwCell.innerHTML = "";
+        tkwCell.appendChild(chipsDiv);
+
+        const missDiv = document.createElement("div");
+        missDiv.className = "chips";
+        (mjson || []).slice(0,6).forEach(k => {
+          const li = document.createElement("span");
+          li.className = "chip";
+          li.textContent = k;
+          missDiv.appendChild(li);
+        });
+        mkwCell.innerHTML = "";
+        mkwCell.appendChild(missDiv);
+      } catch(e){}
+    });
+  })();
+</script>
+
+{% endblock %}

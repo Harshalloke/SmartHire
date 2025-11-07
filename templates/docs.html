@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="card">
+  <h1 class="mt-0">Docs</h1>
+  <p class="muted">How SmartHire analyzes your resume vs job descriptions.</p>
+</section>
+
+<section class="card">
+  <h2>How it works</h2>
+  <ol class="list">
+    <li><strong>Parsing:</strong> Reads PDF/DOCX/TXT and normalizes text (keeps tech tokens like <code>c++</code>, <code>ci/cd</code>, <code>power bi</code>).</li>
+    <li><strong>Matching:</strong> TF-IDF cosine with phrase normalization, alias expansion, and a section-weighted blend (Experience &gt; Skills &gt; Summary).</li>
+    <li><strong>Insights:</strong> Overlap terms, missing keywords, top JD terms, suggested skills (role-aware).</li>
+    <li><strong>ATS checks:</strong> Heuristics for sections, contact info, action verbs, dates, length, readability.</li>
+    <li><strong>Experience level:</strong> Rule-based signals + years extraction.</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2>API</h2>
+  <p>POST <code>/api/analyze</code> — form-data or JSON.</p>
+  <pre class="textarea" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">
+curl -X POST http://127.0.0.1:5000/api/analyze \
+  -F "role_hint=Data Analyst" \
+  -F "job_description=SQL Excel Python dashboards..." \
+  -F "resume=@/path/to/resume.pdf"
+  </pre>
+  <p>Or JSON:</p>
+  <pre class="textarea" style="white-space:pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;">
+POST /api/analyze
+{
+  "role_hint": "Data Analyst",
+  "job_description": "SQL Excel Python dashboards...",
+  "resume_text": "Paste raw resume text here if not uploading a file"
+}
+  </pre>
+</section>
+
+<section class="card">
+  <h2>Tips for better scores</h2>
+  <ul class="list">
+    <li>Use clear headings: <em>Experience, Education, Skills</em>.</li>
+    <li>Add years for each role (e.g., 2023–2025).</li>
+    <li>Include action verbs: built, implemented, optimized, delivered.</li>
+    <li>Mirror key JD phrases naturally: “business metrics”, “data cleaning”, “Tableau/Power BI”.</li>
+    <li>Avoid tables/images/symbols that ATS may ignore.</li>
+  </ul>
+</section>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SmartHire — AI Recruitment Assistant</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  </head>
+  <body class="h-full">
+    <!-- Top Nav -->
+    <header class="nav">
+      <div class="nav__inner">
+        <div class="brand">
+          <span class="brand__logo"></span>
+          <span class="brand__text">SmartHire</span>
+        </div>
+
+        <nav class="nav__links">
+          <a href="{{ url_for('index') }}">Analyze</a>
+          <a href="{{ url_for('history') }}">History</a>
+          <a href="{{ url_for('docs') }}">Docs</a>
+        </nav>
+
+        <button id="themeToggle" class="btn btn--ghost" title="Toggle theme">
+          🌓
+        </button>
+      </div>
+    </header>
+
+    <main class="container">{% block content %}{% endblock %}</main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <small>© {{ 2025 }} SmartHire — Demo build</small>
+        <small>Made with Flask</small>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </body>
+</html>

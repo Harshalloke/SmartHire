@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Expose result for charts -->
+<script>
+  window.__RESULT__ = {{ result | tojson | safe }};
+</script>
+
+<section class="card header-summary">
+  <div class="header-summary__left">
+    <h1>Analysis Result</h1>
+    <p class="muted">
+      {% if result.filename %}File: <strong>{{ result.filename }}</strong>{% endif %}
+      {% if result.role_hint %} • Role: <strong>{{ result.role_hint }}</strong>{% endif %}
+    </p>
+    <p><a class="btn btn--ghost" href="{{ url_for('index') }}">← Analyze another resume</a></p>
+  </div>
+
+  <!-- Radial Gauge -->
+  <div class="gauge" data-progress="{{ result.match_percent|default(0) }}">
+    <div class="gauge__ring"></div>
+    <div class="gauge__center">
+      <div class="gauge__value">{{ result.match_percent|default(0) }}%</div>
+      <div class="gauge__label">Match</div>
+    </div>
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="card">
+    <h2>Match Overview</h2>
+    <div class="metric">
+      <span class="metric-value">{{ result.match_percent|default(0) }}%</span>
+      <span class="metric-label">Resume ↔ JD Match</span>
+    </div>
+
+    <h3>Top Overlapping Keywords</h3>
+    {% set overlap = result.top_keywords|default([]) %}
+    {% if overlap %}
+      <ul class="chips">
+        {% for kw in overlap %}<li class="chip">{{ kw }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No clear overlap detected.</p>
+    {% endif %}
+
+    <h3>Missing Keywords</h3>
+    {% set missing = result.missing_keywords|default([]) %}
+    {% if missing %}
+      <ul class="chips warn">
+        {% for kw in missing %}<li class="chip">{{ kw }}</li>{% endfor %}
+      </ul>
+      <h3>Copy-ready Missing Keywords</h3>
+      <textarea readonly rows="3" class="textarea">{{ missing|join(", ") }}</textarea>
+    {% else %}
+      <p class="muted">Looks good — no obvious missing keywords.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>ATS Check</h2>
+    <div class="metric">
+      <span class="metric-value">{{ result.ats_score|default(0) }}/100</span>
+      <span class="metric-label">ATS-Friendly Score</span>
+    </div>
+
+    <h3>Warnings</h3>
+    {% set warnings = result.ats_warnings|default([]) %}
+    {% if warnings %}
+      <ul class="list">
+        {% for w in warnings %}<li>⚠️ {{ w }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No ATS issues detected.</p>
+    {% endif %}
+  </div>
+</section>
+
+<section class="grid-2">
+  <div class="card">
+    <h2>TF-IDF Insights</h2>
+
+    {% set jd_terms = result.jd_top_terms|default([]) %}
+    {% if jd_terms %}
+      <h3>Top JD Terms (TF-IDF)</h3>
+      <ul class="chips">
+        {% for kw in jd_terms %}<li class="chip">{{ kw }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">No standout JD terms detected.</p>
+    {% endif %}
+
+    <h3>Suggested Skills to Add</h3>
+    {% set sugg = result.suggested_skills|default([]) %}
+    {% if sugg %}
+      <ul class="chips warn">
+        {% for kw in sugg %}<li class="chip">{{ kw }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">Nice — no obvious gaps detected.</p>
+    {% endif %}
+  </div>
+
+  <div class="card">
+    <h2>Visual Summary</h2>
+    <canvas id="matchBar"></canvas>
+    <div class="spacer"></div>
+    <canvas id="keywordsDonut"></canvas>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Experience Level</h2>
+  <div class="metric">
+    <span class="metric-value">
+      {{ (result.experience.level if result.experience else None) | default('Unknown') }}
+    </span>
+    <span class="metric-label">
+      {% if result.experience and result.experience.years %}
+        {{ result.experience.years.min|default(0) }}–{{ result.experience.years.max|default(0) }} yrs (estimated)
+      {% else %}
+        Not enough signals
+      {% endif %}
+    </span>
+  </div>
+
+  {% if result.experience and result.experience.signals %}
+    <h3>Signals</h3>
+    <ul class="list">
+      {% for s in result.experience.signals %}<li>• {{ s }}</li>{% endfor %}
+    </ul>
+  {% endif %}
+</section>
+
+<section class="card">
+  <h2>What’s next?</h2>
+  <ol class="list">
+    <li>Incorporate relevant <strong>missing keywords</strong> into Experience and Skills sections.</li>
+    <li>Use clear, standard headings: <em>Experience, Education, Skills</em>.</li>
+    <li>Prefer simple text formatting; avoid complex tables or decorative symbols.</li>
+  </ol>
+</section>
+
+{% endblock %}
