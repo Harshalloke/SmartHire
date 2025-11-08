@@ -178,9 +178,3 @@ Developed by **Harshal Loke**
 
 > "Helping job seekers build smarter resumes with AI."
 
-```
-
----
-
-Would you like me to make a **shorter README** (for Render only) or an **aesthetic version with badges and screenshots** for your GitHub page?
-```
